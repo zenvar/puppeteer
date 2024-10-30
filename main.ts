@@ -21,6 +21,7 @@ const config: IBlog = {
     blogUrl: 'https://www.coinbase.com',
     indexPage: '/en-sg/blog/landing',
     articleLinkSelector: 'a.dMNygt',
+    detailsSelector: 'section',
     _id: 'uniqueDataSourceId'
 };
 
