@@ -18,7 +18,7 @@ import Article from './models/Article'; // Adjust the path as necessary
 
 
 const config: IBlog = {
-    blogUrl: 'https://www.coinbase.com',
+    blogUrl: 'http://www.coinbase.com',
     indexPage: '/en-sg/blog/landing',
     articleLinkSelector: 'section div.cds-flex-f1g67tkn.sc-20f7f24c-0.sc-3dcf3304-1.dxlxFg.dZjcVO a',
     nextpageSelector: '#__next > div > div > div > div > div.cds-flex-f1g67tkn.sc-20f7f24c-0.jxwgNN > div > div > div > div > button',

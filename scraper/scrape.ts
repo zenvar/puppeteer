@@ -12,7 +12,8 @@ puppeteer.use(StealthPlugin());
 export default async function scrapeBlog(
     config: IBlog,
     existingPage: Page | null = null,
-    limit: number | null = null
+    //limit default 100
+    limit: number | null = 100
 ) {
     const proxy = await getProxy();
     console.log("Using proxy:", proxy);
@@ -20,26 +21,56 @@ export default async function scrapeBlog(
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: true, // Ensure headless is true for testing
+            headless: false, // Ensure headless is true for testing
             //args: [`--proxy-server=${proxy}`]
         });
         let page = await browser.newPage();
         await page.goto(`${config.blogUrl}${config.indexPage}`, {
             waitUntil: "networkidle2",
-            timeout: 30000 // Increase timeout
+            timeout: 160000 // Increase timeout
         });
 
-        // Wait for the article links to load
-        await page.waitForSelector(config.articleLinkSelector, { timeout: 15000 });
+        let totalLinks: string[] = [];
+        let hasNextPage = true;
+        // delay 2s
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
-        let blogLinks = await page.$$eval(config.articleLinkSelector, (elements) => {
-            return elements.map((element) => (element as HTMLAnchorElement).href);
-        });
+        while (hasNextPage && (!limit || totalLinks.length < limit)) {
+            // Wait for the article links to load
+            await page.waitForSelector(config.articleLinkSelector, { timeout: 15000 });
 
-        console.log(blogLinks);
+            let blogLinks = await page.$$eval(config.articleLinkSelector, (elements) => {
+                return elements.map((element) => (element as HTMLAnchorElement).href);
+            });
 
-        // Cut array
-        if (limit) blogLinks = blogLinks.slice(0, limit);
+            //bloglink deduplicate
+            blogLinks = [...new Set(blogLinks)];    
+
+            
+
+            // Add new links to totalLinks
+            totalLinks = totalLinks.concat(blogLinks);
+            totalLinks = [...new Set(totalLinks)];
+            console.log("Found links on current page:", totalLinks);
+
+
+            // Check if we have reached the limit
+            if (limit && totalLinks.length >= limit) {
+                totalLinks = totalLinks.slice(0, limit);
+                break;
+            }
+
+            // Check for the next page button and click it
+            const nextPageButton = await page.$(config.nextpageSelector);
+            if (nextPageButton) {
+                await nextPageButton.click();
+                //delay 2s
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            } else {
+                hasNextPage = false;
+            }
+        }
+
         const existingArticleLinks = await Article.find(
             { dataSourceId: config._id },
             'articleUrl'
@@ -47,15 +78,15 @@ export default async function scrapeBlog(
         const existingArticleLinksSet = new Set(
             existingArticleLinks.map((a) => a.articleUrl)
         );
-        const newLinks = blogLinks.filter(
+        const newLinks = totalLinks.filter(
             (url: string) => !existingArticleLinksSet.has(url)
         );
         for (const url of newLinks) {
             console.log("Adding article to queue", url);
-            //await articleQueue.add(url, { url, config });
+            await articleQueue.add(url, { url, config });
             await retryScrapeDetails(url, config);
         }
-        return blogLinks;
+        return totalLinks;
     } catch (error) {
         console.error("Error during scraping blog:", error);
     } finally {
@@ -68,6 +99,8 @@ export default async function scrapeBlog(
 async function retryScrapeDetails(url: string, config: IBlog, retries = 3) {
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
+            //delay 2s
+            await new Promise(resolve => setTimeout(resolve, 2000));
             await scrapeDetails(url, config);
             break; // Exit loop if successful
         } catch (error) {
