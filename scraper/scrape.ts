@@ -127,6 +127,13 @@ async function scrapeDetails(url: string, config: IBlog) {
         // Wait for the details to load
         await page.waitForSelector(config.detailsSelector, { timeout: 15000 });
 
+        const html = await page.$$eval(config.detailsSelector, (elements) => {
+            return elements.map((element) => (element as HTMLElement).outerHTML);
+        });
+        
+        // Join the array of HTML strings into a single string
+        const rawHtmlString = html.join('\n');
+
         //获取页面内容 section,去除html标签
         const content = await page.$$eval(config.detailsSelector, (elements) => {
             return elements.map((element) => (element as HTMLElement).innerText);
@@ -137,7 +144,8 @@ async function scrapeDetails(url: string, config: IBlog) {
         await Article.create({
             articleUrl: url,
             dataSourceId: config._id,
-            content: text
+            content: text,
+            rawHtml: rawHtmlString
         });
 
         //find db article count

@@ -5,6 +5,7 @@ interface IArticle extends Document {
     articleUrl: string;
     dataSourceId: string;
     content: string;
+    rawHtml: string;
     // Add other fields as necessary
 }
 
@@ -13,6 +14,7 @@ const ArticleSchema: Schema = new Schema({
     articleUrl: { type: String, required: true },
     dataSourceId: { type: String, required: true },
     content: { type: String, required: true },
+    rawHtml: { type: String, required: true },
     // Add other fields as necessary
 });
 
