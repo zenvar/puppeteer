@@ -21,8 +21,8 @@ export default async function scrapeBlog(
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: false, // Ensure headless is true for testing
-            //args: [`--proxy-server=${proxy}`]
+            headless: true, // Ensure headless is true for testing
+            args: [`--proxy-server=${proxy}`]
         });
         let page = await browser.newPage();
         await page.goto(`${config.blogUrl}${config.indexPage}`, {
@@ -119,7 +119,7 @@ async function scrapeDetails(url: string, config: IBlog) {
     try {
         browser = await puppeteer.launch({
             headless: true,
-            //args: [`--proxy-server=${proxy}`]
+            args: [`--proxy-server=${proxy}`]
         });
         let page = await browser.newPage();
         await page.goto(url, { waitUntil: "networkidle2" });
