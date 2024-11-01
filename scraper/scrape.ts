@@ -12,8 +12,8 @@ puppeteer.use(StealthPlugin());
 export default async function scrapeBlog(
     config: IBlog,
     existingPage: Page | null = null,
-    //limit default 100
-    limit: number | null = 100
+    //limit default 50
+    limit: number | null = 50
 ) {
     const proxy = await getProxy();
     console.log("Using proxy:", proxy);

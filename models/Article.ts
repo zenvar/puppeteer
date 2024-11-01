@@ -15,8 +15,7 @@ const ArticleSchema: Schema = new Schema({
     dataSourceId: { type: String, required: true },
     content: { type: String, required: true },
     rawHtml: { type: String, required: true },
-    // Add other fields as necessary
-});
+}, { collection: 'article' });
 
 // Create the model from the schema
 const Article = mongoose.model<IArticle>('Article', ArticleSchema);
