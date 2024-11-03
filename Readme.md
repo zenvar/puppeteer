@@ -1,4 +1,4 @@
-<img src="https://github.com/zenvar/puppeteer/blob/main/a-3d-clean-minimalism-design-logo-of-the-eye-of-pr-QtEwgdKATTeM6ckh8hw-SA-MW24cNULRGi27_o9mGYvrg-removebg-preview.png?raw=true" alt="alt text" style="width: 100px; height: 100px; text-align: center;"> 
+<img src="https://github.com/zenvar/puppeteer/blob/main/pics/a-3d-clean-minimalism-design-logo-of-the-eye-of-pr-QtEwgdKATTeM6ckh8hw-SA-MW24cNULRGi27_o9mGYvrg-removebg-preview.png?raw=true" alt="alt text" style="width: 100px; height: 100px; text-align: center;"> 
 
 # Web3 Blog Scraper
 
