@@ -13,6 +13,8 @@ interface IArticle extends Document {
 const ArticleSchema: Schema = new Schema({
     articleUrl: { type: String, required: true },
     dataSourceId: { type: String, required: true },
+    time:{ type: String, default:Date.now() },
+    header:{ type: String, required: true },
     content: { type: String, required: true },
     rawHtml: { type: String, required: true },
 }, { collection: 'article' });

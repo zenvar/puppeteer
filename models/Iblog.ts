@@ -4,6 +4,8 @@ interface IBlog {
     articleLinkSelector: string; // A selector to find article links on the page
     nextpageSelector: string; // A selector to find next page on the page
     _id: string; // An identifier for the data source, possibly a database ID
+    timeselector: string; 
+    headerselector: string;
     detailsSelector: string; // A selector to find article details on the page
 }
 

@@ -23,6 +23,8 @@ const config: IBlog = {
     articleLinkSelector: 'section div.cds-flex-f1g67tkn.sc-20f7f24c-0.sc-3dcf3304-1.dxlxFg.dZjcVO a',
     nextpageSelector: '#__next > div > div > div > div > div.cds-flex-f1g67tkn.sc-20f7f24c-0.jxwgNN > div > div > div > div > button',
     detailsSelector: '#__next > div > div > div > div > div.cds-flex-f1g67tkn.sc-20f7f24c-0.jxwgNN > div > div > div.cds-flex-f1g67tkn.sc-20f7f24c-0.jqnGZy > section',
+    timeselector: '#article_introduction > header > div > div > div:nth-child(1) > div > div.cds-flex-f1g67tkn.sc-20f7f24c-0.ioIUsw > div.cds-flex-f1g67tkn.sc-20f7f24c-0.hjdKBS > p:nth-child(2)',
+    headerselector: 'h1',
     _id: '001'
 };
 

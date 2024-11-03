@@ -5,6 +5,8 @@ import articleQueue from '../models/articleQueue';
 import axios from 'axios';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import getProxy from '../utils/proxy'
+
 
 // Add stealth plugin
 puppeteer.use(StealthPlugin());
@@ -21,7 +23,7 @@ export default async function scrapeBlog(
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: true, // Ensure headless is true for testing
+            headless: false, // Ensure headless is true for testing
             //args: [`--proxy-server=${proxy}`]
         });
         let page = await browser.newPage();
@@ -44,9 +46,9 @@ export default async function scrapeBlog(
             });
 
             //bloglink deduplicate
-            blogLinks = [...new Set(blogLinks)];    
+            blogLinks = [...new Set(blogLinks)];
 
-            
+
 
             // Add new links to totalLinks
             totalLinks = totalLinks.concat(blogLinks);
@@ -83,7 +85,7 @@ export default async function scrapeBlog(
         );
         for (const url of newLinks) {
             console.log("Adding article to queue", url);
-            await articleQueue.add(url, { url, config });
+            //await articleQueue.add(url, { url, config });
             await retryScrapeDetails(url, config);
         }
         return totalLinks;
@@ -118,7 +120,7 @@ async function scrapeDetails(url: string, config: IBlog) {
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             //args: [`--proxy-server=${proxy}`]
         });
         let page = await browser.newPage();
@@ -126,12 +128,57 @@ async function scrapeDetails(url: string, config: IBlog) {
 
         // Wait for the details to load
         await page.waitForSelector(config.detailsSelector, { timeout: 15000 });
+        const header = await page.$eval(config.headerselector, el => el.textContent); 
+        const time = await page.$eval(config.timeselector, el => el.textContent || "N/A");
+        // reformat the time:(20\d{2}([\.\-/|年月\s]{1,3}\d{1,2}){2}日?(\s?\d{2}:\d{2}(:\d{2})?)?)|(\d{1,2}\s?(分钟|小时|天)前)
+        const timeRegex = /(20\d{2}([\.\-/|年月\s]{1,3}\d{1,2}){2}日?(\s?\d{2}:\d{2}(:\d{2})?)?)|(\d{1,2}\s?(分钟|小时|天)前)/;
+        const timeMatch = timeRegex.exec(time);
+        let formattime;
+        if (timeMatch) {
+             formattime = timeMatch[0];// Full date
+        }
+
 
         const html = await page.$$eval(config.detailsSelector, (elements) => {
-            return elements.map((element) => (element as HTMLElement).outerHTML);
-        });
+            return elements.map((element) => {
+                // 清理HTML内容函数
+                function cleanHtmlContent(htmlContent: string): string {
+                    // Create a new div to hold the cleaned content
+                    const cleanDiv = document.createElement('div');
+                    cleanDiv.innerHTML = htmlContent;
         
-        // Join the array of HTML strings into a single string
+                    // Remove script and style elements
+                    const scriptsAndStyles = cleanDiv.querySelectorAll('script, style');
+                    scriptsAndStyles.forEach(el => el.remove());
+        
+                    // Remove all attributes from remaining elements except images
+                    const allElements = cleanDiv.getElementsByTagName('*');
+                    for (let el of Array.from(allElements)) {
+                        if (el.tagName.toLowerCase() !== 'img') {
+                            while (el.attributes.length > 0) {
+                                el.removeAttribute(el.attributes[0].name);
+                            }
+                        }
+                    }
+        
+                    // Convert specific elements to simpler ones (retain text structure)
+                    const elementsToSimplify = cleanDiv.querySelectorAll('div, span, strong, em, i, b');
+                    elementsToSimplify.forEach(el => {
+                        const p = document.createElement('p');
+                        p.innerHTML = el.innerHTML;
+                        if (el.parentNode) {
+                            el.parentNode.replaceChild(p, el);
+                        }
+                    });
+        
+                    return cleanDiv.innerHTML;
+                }
+        
+                // 对当前 element 使用 cleanHtmlContent 函数
+                return cleanHtmlContent(element.innerHTML);
+            });
+        });
+        // Join the array of cleaned HTML strings into a single string
         const rawHtmlString = html.join('\n');
 
         //获取页面内容 section,去除html标签
@@ -145,12 +192,14 @@ async function scrapeDetails(url: string, config: IBlog) {
             articleUrl: url,
             dataSourceId: config._id,
             content: text,
+            header:header,
+            time: formattime||time,
             rawHtml: rawHtmlString
         });
 
         //find db article count
         const articleCount = await Article.countDocuments({ dataSourceId: config._id });
-        console.log("Added to the database! current count:", articleCount);    
+        console.log("Added to the database! current count:", articleCount);
     } catch (error) {
         console.error("Error during scraping details:", error);
         throw error; // Re-throw error to handle retries
@@ -161,9 +210,3 @@ async function scrapeDetails(url: string, config: IBlog) {
     }
 }
 
-async function getProxy() {
-    const proxies = await import('fs/promises');
-    const proxyList = (await proxies.readFile('./proxies.txt', 'utf8')).split('\n');
-    const randomProxy = proxyList[Math.floor(Math.random() * proxyList.length)];
-    return randomProxy;
-}
