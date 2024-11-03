@@ -76,6 +76,21 @@ const config: IBlog = {
 };
 ```
 
+Config2:
+
+```typescript
+const config2: IBlog = {
+    blogUrl: 'https://crypto.com/',
+    indexPage: '/trending',
+    articleLinkSelector: 'div.card-frame a.card-box-image',
+    nextpageSelector: 'div.contianer-button',
+    detailsSelector: '#gatsby-focus-wrapper > div > main > div > div.article-container > div.article-box',
+    timeselector: 'span.article-university-details-date, p.card-event-detail-date',
+    headerselector: 'h1',
+    _id: 'crypto.com'
+}
+```
+
 ## Usage
 
 After running the scraper, the console will display the scraped links. Any errors encountered during the scraping process will also be logged to the console.

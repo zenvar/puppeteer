@@ -34,10 +34,28 @@ const config: IBlog = {
     _id: '001'
 };
 
-scrapeBlog(config)
-    .then((links) => {
-        console.log('Scraped links:', links);
-    })
-    .catch((error) => {
-        console.error('Error scraping blog:', error);
-    });
+const config2: IBlog = {
+    blogUrl: 'https://crypto.com/',
+    indexPage: '/trending',
+    articleLinkSelector: 'div.card-frame a.card-box-image',
+    nextpageSelector: 'div.contianer-button',
+    detailsSelector: '#gatsby-focus-wrapper > div > main > div > div.article-container > div.article-box',
+    timeselector: 'span.article-university-details-date, p.card-event-detail-date',
+    headerselector: 'h1',
+    _id: 'crypto.com'
+}
+
+const configList = [ config2] as IBlog[]
+
+configList.forEach(config => {
+    scrapeBlog(config)
+        .then((links) => {
+            console.log('Scraped links:', links);
+        })
+        .catch((error) => {
+            console.error('Error scraping blog:', error);
+        });
+}
+)
+
+
