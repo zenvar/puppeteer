@@ -47,7 +47,8 @@ This project is a **TypeScript + Puppeteer** blog scraper designed to extract ar
    (which could be configured in package.json)
 
    Then you can see the console logs of the scraped data.
-   ![console logs](image-1.png)
+ 
+     ![alt text](/pics/aa93e5fa0a5cab4df14e439b1a335f9.png)
 
 ## Configuration
 
