@@ -2,9 +2,13 @@
 
 # Web3 Blog Scraper
 
-This project is a **TypeScript + Puppeteer** blog scraper designed to extract article links and details from a specified blog. It connects to a **MongoDB database** to store the scraped data.It can **adjust the config selectors** to scrape different parts of the blog. Frontend is built with **Redwood.js**(https://github.com/zenvar/redwoodblog) and connected to the same MongoDB database.
+>**Preview URL: https://web3news.netlify.app/news**
+(Deploy in the netlify)
 
 ![alt text](/pics/image.png)
+
+This project is a **TypeScript + Puppeteer** blog scraper designed to extract article links and details from a specified blog. It connects to a **MongoDB database** to store the scraped data.It can **adjust the config selectors** to scrape different parts of the blog. Frontend is built with **Redwood.js frentend web**(https://github.com/zenvar/redwoodblog) and connected to the same MongoDB database.
+
 
 ## Features
 
