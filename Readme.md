@@ -1,4 +1,5 @@
-<img src="https://github.com/zenvar/puppeteer/blob/main/a-3d-clean-minimalism-design-logo-of-the-eye-of-pr-QtEwgdKATTeM6ckh8hw-SA-MW24cNULRGi27_o9mGYvrg-removebg-preview.png?raw=true" alt="alt text" stype="width: 50px; height: 50px;">
+<img src="https://github.com/zenvar/puppeteer/blob/main/a-3d-clean-minimalism-design-logo-of-the-eye-of-pr-QtEwgdKATTeM6ckh8hw-SA-MW24cNULRGi27_o9mGYvrg-removebg-preview.png?raw=true" alt="alt text" style="width: 100px; height: 100px; margin: 0 auto; "> 
+
 # Web3 Blog Scraper
 
 This project is a **TypeScript + Puppeteer** blog scraper designed to extract article links and details from a specified blog. It connects to a **MongoDB database** to store the scraped data.It can **adjust the config selectors** to scrape different parts of the blog. Frontend is built with **Redwood.js**(https://github.com/zenvar/redwoodblog) and connected to the same MongoDB database.
