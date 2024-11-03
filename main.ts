@@ -1,21 +1,27 @@
 import scrapeBlog from './scraper/scrape';
 import IBlog from './models/Iblog';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 import Article from './models/Article'; // Adjust the path as necessary
 
-    const connectDB = async () => {
-        try {
-            await mongoose.connect('mongodb://localhost:27017/blogscraper');
-            console.log('MongoDB connected');
-        } catch (error) {
-            console.error('MongoDB connection error:', error);
-            process.exit(1);
+const connectDB = async () => {
+    try {
+        const MongoDB_URI = process.env.DATABASE_URL as string;
+
+        if (!MongoDB_URI) {
+            throw new Error("DATABASE_URL environment variable is not set");
         }
-    };
+        await mongoose.connect(MongoDB_URI);
+        console.log('MongoDB connected');
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        process.exit(1);
+    }
+};
 
-    // Call the connectDB function to establish the connection
-    connectDB();
-
+// Call the connectDB function to establish the connection
+connectDB();
 
 const config: IBlog = {
     blogUrl: 'http://www.coinbase.com',
@@ -35,5 +41,3 @@ scrapeBlog(config)
     .catch((error) => {
         console.error('Error scraping blog:', error);
     });
-
-
