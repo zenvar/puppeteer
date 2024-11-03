@@ -4,7 +4,7 @@
 
 This project is a **TypeScript + Puppeteer** blog scraper designed to extract article links and details from a specified blog. It connects to a **MongoDB database** to store the scraped data.It can **adjust the config selectors** to scrape different parts of the blog. Frontend is built with **Redwood.js**(https://github.com/zenvar/redwoodblog) and connected to the same MongoDB database.
 
-![alt text](image-2.png)
+![alt text](/pics/image.png)
 
 ## Features
 
@@ -80,11 +80,17 @@ The data will be stored in the MongoDB database for further processing or analys
 Can be visualized and managed in **Redwood.js built-in web dashboard**
 Links:https://github.com/zenvar/redwoodblog
 .(They should be connected to the same MongoDB database.)
-![alt text](image-5.png)
-![alt text](image-6.png)
-![alt text](image-7.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
 
+![alt text](/pics/image-1.png)
 
+![alt text](/pics/image-2.png)
 
+![alt text](/pics/image-3.png)
+
+![alt text](/pics/image-4.png)
+
+![alt text](/pics/image-5.png)
+
+![alt text](/pics/image-6.png)
+
+![alt text](/pics/image-7.png)
